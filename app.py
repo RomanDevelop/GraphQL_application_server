@@ -22,4 +22,4 @@ app.include_router(graphql_app, prefix="/graphql")
 
 @app.get("/")
 async def root():
-    return {"message": "Hello, FastAPI with Strawberry GraphQL!"}
+    return {"message": "Hello, FastAPI with Strawberry GraphQL"}
