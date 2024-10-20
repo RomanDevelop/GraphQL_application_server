@@ -1,0 +1,30 @@
+version: '3.8' # Версія Docker Compose
+
+services:
+  web:
+    build: . # Будуємо образ з Dockerfile в кореневій директорії
+    container_name: backend
+    ports:
+      - "8000:8000" # Маппінг порта 8000 контейнера на 8000 хоста
+    depends_on:
+      - db # Бекенд залежить від контейнера бази даних
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/mydb # Строка підключення до бази даних
+    volumes:
+      - .:/app # Монтируем локальні файли додатку в контейнер
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 # Зміна на app:app
+
+  db:
+    image: postgres:13 # Використовуємо образ Postgres версії 13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Зберігання даних Postgres
+    ports:
+      - "5432:5432" # Маппінг порта 5432 контейнера на 5432 хоста
+
+volumes:
+  postgres_data: # Оголошення volume для зберігання даних Postgres
